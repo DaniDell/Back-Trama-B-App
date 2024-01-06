@@ -29,6 +29,9 @@ module.exports = (sequelize) => {
         productiveActivity: {
             type: DataTypes.ARRAY(DataTypes.STRING),
         },
+        description: {
+            type: DataTypes.STRING(200),
+        },
         country: DataTypes.STRING,
         province: DataTypes.STRING,
         latitude: DataTypes.FLOAT,
