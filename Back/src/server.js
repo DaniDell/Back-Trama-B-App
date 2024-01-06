@@ -1,9 +1,7 @@
-const express = require('express');
+const express = require("express");
+const router = require("./routes/index");
 const app = express();
 app.use(express.json());
 
-// Aquí puedes definir tus rutas, por ejemplo:
-// const routes = require('./routes');
-// app.use(routes);
-
+app.use(router);
 module.exports = app;
