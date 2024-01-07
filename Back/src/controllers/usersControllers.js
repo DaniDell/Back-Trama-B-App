@@ -61,11 +61,11 @@ const editUser = async (req, res) => {
     mitigatedWaterFootprint,
   } = req.body;
   try {
-    const response = await User.findOne({ where: { id: id } });
-    if (!response) {
-      res.status(501).json("No se encontró el Usuario");
+    const editee = await User.findByPk(id);
+    if (!editee) {
+      res.status(401).json("No se encontró el Usuario");
     }
-    await response.update({
+    const response = await editee.update({
       name,
       email,
       password,
