@@ -9,7 +9,7 @@ const measuresRouter = Router();
 
 measuresRouter.post("/create", measureCreatorHandler);
 measuresRouter.put("/edit", measureEditorHandler);
-measuresRouter.get("/:id", getMeasureHandler);
 measuresRouter.get("/getby", getAllByXHandler);
+measuresRouter.get("/:id", getMeasureHandler);
 
 module.exports = measuresRouter;

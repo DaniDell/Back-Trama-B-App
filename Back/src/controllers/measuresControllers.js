@@ -38,7 +38,7 @@ const measureEditor = async (req, res) => {
     waterFootprintResult,
   } = req.body;
   try {
-    const editee = await findByPk(id);
+    const editee = await Measure.findByPk(id);
     if (!editee) {
       res
         .status(401)
@@ -62,7 +62,7 @@ const measureEditor = async (req, res) => {
 const getMeasure = async (req, res) => {
   const { id } = req.params;
   try {
-    const response = await findByPk(id);
+    const response = await Measure.findByPk(id);
     res.status(201).json(response);
   } catch (error) {
     res.status(401).json({ error: message.error });
@@ -76,25 +76,34 @@ const getAllByX = async (req, res) => {
     managedPolyesterBaseKg,
     managedMixBaseKg,
   } = req.body;
+
   try {
     if (userId) {
-      const response = await findAll({ where: userId });
+      const response = await Measure.findAll({ where: { userId: userId } });
       res.status(201).json(response);
     }
     if (deliveryDate) {
-      const response = await findAll({ where: deliveryDate });
+      const response = await Measure.findAll({
+        where: { deliveryDate: deliveryDate },
+      });
       res.status(201).json(response);
     }
     if (managedCottonBaseKg) {
-      const response = await findAll({ where: managedCottonBaseKg });
+      const response = await Measure.findAll({
+        where: { managedCottonBaseKg: managedCottonBaseKg },
+      });
       res.status(201).json(response);
     }
     if (managedPolyesterBaseKg) {
-      const response = await findAll({ where: managedPolyesterBaseKg });
+      const response = await Measure.findAll({
+        where: { managedPolyesterBaseKg: managedPolyesterBaseKg },
+      });
       res.status(201).json(response);
     }
     if (managedMixBaseKg) {
-      const response = await findAll({ where: managedMixBaseKg });
+      const response = await Measure.findAll({
+        where: { managedMixBaseKg: managedMixBaseKg },
+      });
       res.status(201).json(response);
     }
   } catch (error) {
