@@ -69,7 +69,8 @@ const getMeasure = async (req, res) => {
 const getAllByX = async (req, res) => {
   const {
     userId,
-    deliveryDate,
+    startDate,
+    endDate,
     managedCottonBaseKg,
     managedPolyesterBaseKg,
     managedMixBaseKg,
@@ -80,14 +81,26 @@ const getAllByX = async (req, res) => {
       const response = await Measure.findAll({ where: { userId: userId } });
       res.status(201).json(response);
     }
-    if (deliveryDate) {
-      const date = splice.deliveryDate(0, 10);
-      console.log(date);
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+
+      start.setHours(0, 0, 0, 0);
+      end.setHours(23, 59, 59, 999);
+      console.log(start);
+      console.log(end);
+
       const response = await Measure.findAll({
-        where: { deliveryDate: date },
+        where: {
+          deliveryDate: {
+            [Op.between]: [start, end],
+          },
+        },
       });
+      console.log(response);
       res.status(201).json(response);
     }
+
     if (managedCottonBaseKg) {
       const response = await Measure.findAll({
         where: { managedCottonBaseKg: managedCottonBaseKg },
