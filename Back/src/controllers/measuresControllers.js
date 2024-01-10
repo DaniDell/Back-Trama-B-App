@@ -30,7 +30,6 @@ const measureEditor = async (req, res) => {
   const {
     id,
     userId,
-    deliveryDate,
     managedCottonBaseKg,
     managedPolyesterBaseKg,
     managedMixBaseKg,
@@ -42,18 +41,17 @@ const measureEditor = async (req, res) => {
     if (!editee) {
       res
         .status(401)
-        .json("No se encontró el regístro que se desea actualizar");
+        .json("No se encontró el registro que se desea actualizar");
     }
     const response = await Measure.update({
       userId,
-      deliveryDate,
       managedCottonBaseKg,
       managedPolyesterBaseKg,
       managedMixBaseKg,
       carbonFootprintResult,
       waterFootprintResult,
     });
-    res.status(202).json(response + "Regístro editado con éxito");
+    res.status(202).json(response + "registro editado con éxito");
   } catch (error) {
     console.log(error);
     res.status(402).json({ error: message.error });
@@ -83,8 +81,10 @@ const getAllByX = async (req, res) => {
       res.status(201).json(response);
     }
     if (deliveryDate) {
+      const date = splice.deliveryDate(0, 10);
+      console.log(date);
       const response = await Measure.findAll({
-        where: { deliveryDate: deliveryDate },
+        where: { deliveryDate: date },
       });
       res.status(201).json(response);
     }
