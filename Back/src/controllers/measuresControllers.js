@@ -1,4 +1,5 @@
 const { Measure } = require("../db");
+const { Op } = require("sequelize");
 
 const measureCreator = async (req, res) => {
   const {
@@ -92,7 +93,7 @@ const getAllByX = async (req, res) => {
 
       const response = await Measure.findAll({
         where: {
-          deliveryDate: {
+          createdAt: {
             [Op.between]: [start, end],
           },
         },
@@ -120,6 +121,7 @@ const getAllByX = async (req, res) => {
       res.status(201).json(response);
     }
   } catch (error) {
+    console.log(error);
     res.status(401).json({ error: message.error });
   }
 };
