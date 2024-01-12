@@ -1,9 +1,9 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  sequelize.define('measure', {
+  sequelize.define("measure", {
     id: {
-      type: DataTypes.UUID, 
+      type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
@@ -36,5 +36,5 @@ module.exports = (sequelize) => {
       type: DataTypes.FLOAT,
       allowNull: false,
     },
-  },{timestamps: false});
+  });
 };

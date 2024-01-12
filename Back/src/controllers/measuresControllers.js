@@ -1,4 +1,5 @@
 const { Measure } = require("../db");
+const { Op } = require("sequelize");
 
 const measureCreator = async (req, res) => {
   const {
@@ -30,7 +31,6 @@ const measureEditor = async (req, res) => {
   const {
     id,
     userId,
-    deliveryDate,
     managedCottonBaseKg,
     managedPolyesterBaseKg,
     managedMixBaseKg,
@@ -42,18 +42,17 @@ const measureEditor = async (req, res) => {
     if (!editee) {
       res
         .status(401)
-        .json("No se encontró el regístro que se desea actualizar");
+        .json("No se encontró el registro que se desea actualizar");
     }
     const response = await Measure.update({
       userId,
-      deliveryDate,
       managedCottonBaseKg,
       managedPolyesterBaseKg,
       managedMixBaseKg,
       carbonFootprintResult,
       waterFootprintResult,
     });
-    res.status(202).json(response + "Regístro editado con éxito");
+    res.status(202).json(response + "registro editado con éxito");
   } catch (error) {
     console.log(error);
     res.status(402).json({ error: message.error });
@@ -71,7 +70,8 @@ const getMeasure = async (req, res) => {
 const getAllByX = async (req, res) => {
   const {
     userId,
-    deliveryDate,
+    startDate,
+    endDate,
     managedCottonBaseKg,
     managedPolyesterBaseKg,
     managedMixBaseKg,
@@ -82,12 +82,26 @@ const getAllByX = async (req, res) => {
       const response = await Measure.findAll({ where: { userId: userId } });
       res.status(201).json(response);
     }
-    if (deliveryDate) {
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+
+      start.setHours(0, 0, 0, 0);
+      end.setHours(23, 59, 59, 999);
+      console.log(start);
+      console.log(end);
+
       const response = await Measure.findAll({
-        where: { deliveryDate: deliveryDate },
+        where: {
+          createdAt: {
+            [Op.between]: [start, end],
+          },
+        },
       });
+      console.log(response);
       res.status(201).json(response);
     }
+
     if (managedCottonBaseKg) {
       const response = await Measure.findAll({
         where: { managedCottonBaseKg: managedCottonBaseKg },
@@ -107,6 +121,7 @@ const getAllByX = async (req, res) => {
       res.status(201).json(response);
     }
   } catch (error) {
+    console.log(error);
     res.status(401).json({ error: message.error });
   }
 };

@@ -26,7 +26,7 @@ const getMeasureHandler = async (req, res) => {
     const response = await getMeasure(req, res);
     res.status(201).json(response);
   } catch (error) {
-    res.status(401).json("No se encontró el regístro");
+    res.status(401).json("No se encontró el registro");
   }
 };
 const getAllByXHandler = async (req, res) => {
