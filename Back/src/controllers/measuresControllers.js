@@ -55,7 +55,7 @@ const measureEditor = async (req, res) => {
     res.status(202).json(response + "registro editado con éxito");
   } catch (error) {
     console.log(error);
-    res.status(402).json({ error: message.error });
+    res.status(401).json({ error: message.error });
   }
 };
 const getMeasure = async (req, res) => {
