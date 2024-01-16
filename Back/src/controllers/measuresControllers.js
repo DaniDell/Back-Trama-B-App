@@ -122,7 +122,7 @@ const getAllByX = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(401).json({ error: message.error });
+    res.status(402).json({ error: message.error });
   }
 };
 module.exports = { measureCreator, measureEditor, getMeasure, getAllByX };
