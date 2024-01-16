@@ -24,7 +24,7 @@ const measureCreator = async (req, res) => {
     res.status(202).json(response);
   } catch (error) {
     console.log(error);
-    res.status(402).json({ error: message.error });
+    res.status(401).json({ error: message.error });
   }
 };
 const measureEditor = async (req, res) => {
