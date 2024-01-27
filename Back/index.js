@@ -13,3 +13,7 @@ conn
   .catch((error) => {
     console.error("Unable to sync models:", error);
   });
+
+// app.listen(port);
+
+console.log("Running on port ", port);
