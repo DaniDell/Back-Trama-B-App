@@ -1,6 +1,8 @@
+require("dotenv").config();
+
 const server = require("./src/server.js");
 const { conn } = require("./src/db.js");
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3002;
 
 // Syncing all the models at once.
 conn
