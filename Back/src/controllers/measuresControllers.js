@@ -38,13 +38,15 @@ const measureEditor = async (req, res) => {
     waterFootprintResult,
   } = req.body;
   try {
+    // Buscar la medida por su clave primaria (id)
     const editee = await Measure.findByPk(id);
+    // Verificar si la medida existe
     if (!editee) {
-      res
-        .status(401)
-        .json("No se encontró el registro que se desea actualizar");
+      // Si no existe, responder con un error
+      return res.status(404).json("No se encontró el registro que se desea actualizar");
     }
-    const response = await Measure.update({
+    // Actualizar la medida con los nuevos valores
+    await editee.update({
       userId,
       managedCottonBaseKg,
       managedPolyesterBaseKg,
@@ -52,12 +54,15 @@ const measureEditor = async (req, res) => {
       carbonFootprintResult,
       waterFootprintResult,
     });
-    res.status(202).json(response + "registro editado con éxito");
+    // Responder con un mensaje de éxito
+    res.status(200).json("Registro editado con éxito");
   } catch (error) {
+    // Manejar cualquier error que ocurra durante el proceso
     console.log(error);
-    res.status(401).json({ error: message.error });
+    res.status(500).json({ error: error.message });
   }
 };
+
 const getMeasure = async (req, res) => {
   const { id } = req.params;
   try {

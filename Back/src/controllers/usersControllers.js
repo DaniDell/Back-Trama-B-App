@@ -63,7 +63,7 @@ const editUser = async (req, res) => {
   try {
     const editee = await User.findByPk(id);
     if (!editee) {
-      res.status(401).json("No se encontró el Usuario");
+      return res.status(401).json("No se encontró el Usuario");
     }
     const response = await editee.update({
       name,
@@ -81,12 +81,16 @@ const editUser = async (req, res) => {
       mitigatedCarbonFootprint,
       mitigatedWaterFootprint,
     });
-    res.status(202).json(response + "Usuario editado con éxito");
+    // Enviar la respuesta desde editUser
+    return res.status(201).json("Usuario editado con éxito");
   } catch (error) {
     console.log(error);
-    res.status(402).json({ error: message.error });
+    // No envíes la respuesta desde aquí
+    throw error; // Re-lanza el error para que pueda ser manejado por el controlador superior
   }
 };
+
+
 
 const getUser = async (req, res) => {
   const { params } = req;
