@@ -28,6 +28,8 @@ fs.readdirSync(path.join(__dirname, "/models"))
 
 modelDefiners.forEach((model) => model(sequelize));
 
+
+
 let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [
   entry[0][0].toUpperCase() + entry[0].slice(1),
@@ -37,13 +39,23 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 const { User, Measure } = sequelize.models;
 
-User.belongsToMany(Measure, { through: "UserMeasure" });
-Measure.belongsToMany(User, { through: "UserMeasure" });
+// Establecer las relaciones entre los modelos
+User.hasMany(Measure, { foreignKey: 'userId' }); // Un usuario tiene muchas medidas
+Measure.belongsTo(User, { foreignKey: 'userId' }); // Cada medida pertenece a un solo usuario
 
-sequelize
-  .sync()
-  .then(() => console.log("Tablas creadas"))
-  .catch((error) => console.log(error));
+// Intentar sincronizar cada modelo individualmente
+async function syncTables() {
+  try {
+    await User.sync();
+    console.log("Tabla User creada");
+    await Measure.sync();
+    console.log("Tabla Measure creada");
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+syncTables();
 
 module.exports = {
   ...sequelize.models,

@@ -18,11 +18,13 @@ const userCreatorHandler = async (req, res) => {
 const editUserHandler = async (req, res) => {
   try {
     const response = await editUser(req, res);
-    res.status(201).json(response);
+    // No es necesario enviar una respuesta aquí
   } catch (error) {
     res.status(401).json("Usuario no editado");
   }
 };
+
+
 
 const getUserHandler = async (req, res) => {
   try {
