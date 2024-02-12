@@ -15,11 +15,6 @@ The project follows an organized structure as follows:
 ## API Usage
 The API provides the following routes for managing measures and users:
 
-### Measures Routes
-- `POST /measures/create`: Creates a new measure.
-- `PUT /measures/edit`: Edits an existing measure.
-- `GET /measures/:id`: Gets a measure by its ID.
-- `GET /measures/getby`: Gets measures according to different criteria (see details in the implementation).
 
 ### Users Routes
 - `POST /users/create`: Creates a new user.
@@ -28,7 +23,48 @@ The API provides the following routes for managing measures and users:
 - `GET /users`: Gets all users.
 - `DELETE /users/delete/:id`: Deletes a user by ID.
 
+### Measures Routes
+- `POST /measures/create`: Creates a new measure.
+- `PUT /measures/edit`: Edits an existing measure.
+- `GET /measures/:id`: Gets a measure by its ID.
+- `GET /measures/getby`: Gets measures according to different criteria (see details in the implementation).
+
+
 ## JSON Examples for Testing
+
+
+
+### Create a User
+```json
+{
+  "name": "Test User",
+  "email": "user@example.com",
+  "password": "password123",
+  "country": "Argentina",
+  "province": "Buenos Aires"
+}
+```
+
+### Edit a User
+```json
+{
+  "id": "5f5adfe5-7fc8-4db1-9a14-094341812b4c",
+  "name": "Edited User",
+  "email": "editeduser@example.com",
+  "country": "Argentina",
+  "province": "Córdoba"
+}
+```
+
+### Get User by ID
+Send a GET request to `/users/5f5adfe5-7fc8-4db1-9a14-094341812b4c`.
+
+### Get All Users
+Send a GET request to `/users`.
+
+### Delete a User
+Send a DELETE request to `/users/delete/5f5adfe5-7fc8-4db1-9a14-094341812b4c`.
+
 
 ### Create a Measure
 ```json
@@ -66,34 +102,3 @@ Send a GET request to `/measures/getby` with the following JSON in the body:
   "userId": "5f5adfe5-7fc8-4db1-9a14-094341812b4c"
 }
 ```
-
-### Create a User
-```json
-{
-  "name": "Test User",
-  "email": "user@example.com",
-  "password": "password123",
-  "country": "Argentina",
-  "province": "Buenos Aires"
-}
-```
-
-### Edit a User
-```json
-{
-  "id": "5f5adfe5-7fc8-4db1-9a14-094341812b4c",
-  "name": "Edited User",
-  "email": "editeduser@example.com",
-  "country": "Argentina",
-  "province": "Córdoba"
-}
-```
-
-### Get User by ID
-Send a GET request to `/users/5f5adfe5-7fc8-4db1-9a14-094341812b4c`.
-
-### Get All Users
-Send a GET request to `/users`.
-
-### Delete a User
-Send a DELETE request to `/users/delete/5f5adfe5-7fc8-4db1-9a14-094341812b4c`.
