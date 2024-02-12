@@ -58,15 +58,15 @@ const deleteUserByIdHandler = async (req, res) => {
 const loginUserHandler = async (req, res) => {
   try {
     const user = await loginUser(req, res);
-    res.status(200).json(user.toJSON()); // Llama a toJSON aquí
+    return res.status(200).json(user.toJSON()); // Llama a toJSON aquí
   } catch (error) {
     if (error.message === 'No se encontró ningún usuario con ese correo electrónico.' || error.message === 'Contraseña incorrecta.') {
-      res.status(401).json({ error: error.message });
+      return res.status(401).json({ error: error.message });
     } else {
-      res.status(500).json({ error: 'Ha ocurrido un error inesperado.' });
+      return res.status(500).json({ error: 'Ha ocurrido un error inesperado.' });
     }
   }
-};;
+};
 
 module.exports = {
   userCreatorHandler,

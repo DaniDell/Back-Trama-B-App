@@ -1,7 +1,6 @@
 const { Op } = require("sequelize");
 const { User, conn } = require("../db");
 const bcrypt = require('bcrypt');
-
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -10,21 +9,21 @@ const loginUser = async (req, res) => {
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      return res.status(401).json({ error: 'No se encontró ningún usuario con ese correo electrónico.' });
+      throw new Error('No se encontró ningún usuario con ese correo electrónico.');
     }
 
     // Comparar la contraseña proporcionada con la almacenada en la base de datos
     const match = await bcrypt.compare(password, user.password);
 
     if (!match) {
-      return res.status(401).json({ error: 'Contraseña incorrecta.' });
+      throw new Error('Contraseña incorrecta.');
     }
 
     // Si todo va bien, devolver el usuario
-    res.status(200).json(user);
+    return user;
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: error.message });
+    throw error;
   }
 };
 
