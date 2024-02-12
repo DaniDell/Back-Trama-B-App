@@ -1,5 +1,32 @@
 const { Op } = require("sequelize");
 const { User, conn } = require("../db");
+const bcrypt = require('bcrypt');
+
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Buscar al usuario en la base de datos
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(401).json({ error: 'No se encontró ningún usuario con ese correo electrónico.' });
+    }
+
+    // Comparar la contraseña proporcionada con la almacenada en la base de datos
+    const match = await bcrypt.compare(password, user.password);
+
+    if (!match) {
+      return res.status(401).json({ error: 'Contraseña incorrecta.' });
+    }
+
+    // Si todo va bien, devolver el usuario
+    res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
 
 const userCreator = async (req, res) => {
   const {
@@ -38,7 +65,11 @@ const userCreator = async (req, res) => {
     res.status(202).json(response);
   } catch (error) {
     console.log(error);
-    res.status(402).json({ error: message.error });
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      res.status(400).json({ error: 'El mail proporcionado ya se encuentra registrado.' });
+    } else {
+      res.status(500).json({ error: error.message });
+    }
   }
 };
 
@@ -120,7 +151,7 @@ const getUser = async (req, res) => {
     res.status(201).json(response);
   } catch (error) {
     console.log(error);
-    res.status(401).json({ error: message.error });
+    res.status(401).json({ error: error.message });
   }
 };
 
@@ -130,7 +161,7 @@ const getAllUsers = async (req, res) => {
     res.status(201).json(response);
   } catch (error) {
     console.log(error);
-    res.status(401).json({ error: message.error });
+    res.status(401).json({ error: error.message });
   }
 };
 
@@ -156,4 +187,5 @@ module.exports = {
   getUser,
   getAllUsers,
   deleteUserById,
+  loginUser,
 };

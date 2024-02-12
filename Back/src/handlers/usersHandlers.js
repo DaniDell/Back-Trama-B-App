@@ -4,6 +4,7 @@ const {
   getAllUsers,
   deleteUserById,
   editUser,
+  loginUser,
 } = require("../controllers/usersControllers");
 
 const userCreatorHandler = async (req, res) => {
@@ -11,7 +12,11 @@ const userCreatorHandler = async (req, res) => {
     const response = await userCreator(req, res);
     res.status(201).json(response);
   } catch (error) {
-    res.status(401).json("Usuario sin postear");
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      res.status(400).json({ error: 'El mail registrado ya se encuentra ingresado en nuestra base de datos.' });
+    } else {
+      res.status(500).json({ error: 'Ha ocurrido un error inesperado.' });
+    }
   }
 };
 
@@ -50,6 +55,18 @@ const deleteUserByIdHandler = async (req, res) => {
     res.status(401).json("Usuario no borrado");
   }
 };
+const loginUserHandler = async (req, res) => {
+  try {
+    const user = await loginUser(req, res);
+    res.status(200).json(user.toJSON()); // Llama a toJSON aquí
+  } catch (error) {
+    if (error.message === 'No se encontró ningún usuario con ese correo electrónico.' || error.message === 'Contraseña incorrecta.') {
+      res.status(401).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: 'Ha ocurrido un error inesperado.' });
+    }
+  }
+};;
 
 module.exports = {
   userCreatorHandler,
@@ -57,4 +74,5 @@ module.exports = {
   getUserHandler,
   getAllUsersHandler,
   deleteUserByIdHandler,
+  loginUserHandler,
 };
