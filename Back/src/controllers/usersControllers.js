@@ -1,6 +1,10 @@
 const { Op } = require("sequelize");
 const { User, conn } = require("../db");
 const bcrypt = require('bcrypt');
+
+const jwt = require('jsonwebtoken');
+const SECRET_KEY = process.env.SECRET_KEY;
+
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -19,11 +23,15 @@ const loginUser = async (req, res) => {
       throw new Error('Contraseña incorrecta.');
     }
 
-    // Si todo va bien, devolver el usuario
-    return user;
+    // Si todo va bien, generar un token JWT para el usuario
+    const token = jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: '1h' });
+
+    // Devolver el token
+    return token;
+
   } catch (error) {
-    console.log(error);
-    throw error;
+    console.error(error);
+    throw new Error('Error al iniciar sesión.');
   }
 };
 

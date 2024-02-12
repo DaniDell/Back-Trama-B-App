@@ -7,6 +7,7 @@ const {
   loginUser,
 } = require("../controllers/usersControllers");
 
+
 const userCreatorHandler = async (req, res) => {
   try {
     const response = await userCreator(req, res);
@@ -57,16 +58,13 @@ const deleteUserByIdHandler = async (req, res) => {
 };
 const loginUserHandler = async (req, res) => {
   try {
-    const user = await loginUser(req, res);
-    return res.status(200).json(user.toJSON()); // Llama a toJSON aquí
+    const token = await loginUser(req, res);
+    res.status(200).json({ token });
   } catch (error) {
-    if (error.message === 'No se encontró ningún usuario con ese correo electrónico.' || error.message === 'Contraseña incorrecta.') {
-      return res.status(401).json({ error: error.message });
-    } else {
-      return res.status(500).json({ error: 'Ha ocurrido un error inesperado.' });
-    }
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
   }
-};
+}; 
 
 module.exports = {
   userCreatorHandler,
