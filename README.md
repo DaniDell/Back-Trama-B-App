@@ -22,6 +22,7 @@ The API provides the following routes for managing measures and users:
 - `GET /users/:id`: Gets user information by ID.
 - `GET /users`: Gets all users.
 - `DELETE /users/delete/:id`: Deletes a user by ID.
+- `POST /users/login`: Give access to registered users.
 
 ### Measures Routes
 - `POST /measures/create`: Creates a new measure.
@@ -53,6 +54,14 @@ The API provides the following routes for managing measures and users:
   "email": "editeduser@example.com",
   "country": "Argentina",
   "province": "Córdoba"
+}
+```
+
+###  User login
+```json
+{
+  "email": "user@example.com",
+  "password": "password123"
 }
 ```
 
