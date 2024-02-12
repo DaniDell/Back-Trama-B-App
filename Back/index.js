@@ -10,12 +10,9 @@ conn
   .then(() => {
     server.listen(port, () => {
       console.log(`Server at ${port}`); // eslint-disable-line no-console
+      console.log("Running on port ", port);
     });
   })
   .catch((error) => {
     console.error("Unable to sync models:", error);
   });
-
-// app.listen(port);
-
-console.log("Running on port ", port);

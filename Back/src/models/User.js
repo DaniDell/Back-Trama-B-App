@@ -1,7 +1,9 @@
 const { DataTypes } = require("sequelize");
+const bcrypt = require('bcrypt');
+const saltRounds = process.env.BCRYPT_SALT_ROUNDS;
 
 module.exports = (sequelize) => {
-  sequelize.define(
+  const User = sequelize.define(
     "user",
     {
       id: {
@@ -42,6 +44,32 @@ module.exports = (sequelize) => {
       mitigatedCarbonFootprint: DataTypes.FLOAT,
       mitigatedWaterFootprint: DataTypes.FLOAT,
     },
-    { timestamps: false }
+    { 
+      timestamps: false,
+      hooks: {
+        beforeCreate: async (user) => {
+          const salt = await bcrypt.genSalt(saltRounds);
+          user.password = await bcrypt.hash(user.password, salt);
+        },
+        beforeUpdate: async (user) => {
+          if (user.changed('password')) {
+            const salt = await bcrypt.genSalt(saltRounds);
+            user.password = await bcrypt.hash(user.password, salt);
+          }
+        },
+      }
+    }
   );
+
+  User.prototype.isValidPassword = async function(password) {
+    return await bcrypt.compare(password, this.password);
+  }
+
+  User.prototype.toJSON = function () {
+    const values = { ...this.get() };
+    delete values.password;
+    return values;
+  };
+
+  return User;
 };
