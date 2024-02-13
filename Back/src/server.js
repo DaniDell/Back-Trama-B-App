@@ -3,6 +3,10 @@ const router = require("./routers/index");
 // const { auth } = require("express-oauth2-jwt-bearer");
 const app = express();
 
+router.get('/', (req, res) => {
+    res.send('Hello World!');
+  });
+
 // const jwtCheck = auth({
 //   audience: "tramabtextil@gmail.com",
 //   issuerBaseURL: "https://dev-qdibpp58r7xpjz3z.uk.auth0.com/",
