@@ -1,6 +1,7 @@
+require('dotenv').config();
 const { DataTypes } = require("sequelize");
 const bcrypt = require('bcrypt');
-const saltRounds = process.env.BCRYPT_SALT_ROUNDS;
+const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS) ; 
 
 module.exports = (sequelize) => {
   const User = sequelize.define(

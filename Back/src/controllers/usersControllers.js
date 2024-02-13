@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { Op } = require("sequelize");
 const { User, conn } = require("../db");
 const bcrypt = require('bcrypt');
