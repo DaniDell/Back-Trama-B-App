@@ -24,6 +24,7 @@ const measureCreator = async (req, res) => {
     res.status(202).json(response);
   } catch (error) {
     console.log(error);
+    console.log(5555);
     res.status(401).json({ error: message.error });
   }
 };
@@ -43,7 +44,9 @@ const measureEditor = async (req, res) => {
     // Verificar si la medida existe
     if (!editee) {
       // Si no existe, responder con un error
-      return res.status(404).json("No se encontró el registro que se desea actualizar");
+      return res
+        .status(404)
+        .json("No se encontró el registro que se desea actualizar");
     }
     // Actualizar la medida con los nuevos valores
     await editee.update({
@@ -130,4 +133,24 @@ const getAllByX = async (req, res) => {
     res.status(402).json({ error: message.error });
   }
 };
-module.exports = { measureCreator, measureEditor, getMeasure, getAllByX };
+const deleteMeasure = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const response = await Measure.findByPk(id);
+    if (response) await response.destroy();
+    res.status(201).json("Se ha eliminado el registro");
+    if (!response) {
+      res.status(501).json("No se encontró el registro");
+    }
+  } catch (error) {
+    res.status(402).json({ error: message.error });
+  }
+};
+
+module.exports = {
+  measureCreator,
+  measureEditor,
+  getMeasure,
+  getAllByX,
+  deleteMeasure,
+};
