@@ -1,63 +1,21 @@
 require("dotenv").config();
-const { Sequelize } = require("sequelize");
+const { createServer } = require("node:http");
+const app = require("./server");
+const PORT = process.env.PORT || 3002;
+
+const mongoose = require("mongoose");
+// const { Sequelize } = require("sequelize");
 const fs = require("fs");
 const path = require("path");
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = process.env;
-console.log(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`);
+// const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = process.env;
+const connectionAddress = `mongodb+srv://tramabtextil:cPU9hvL7NLrQpnBf@tramab.yr30zqd.mongodb.net/`;
 
-const sequelize = new Sequelize(
-  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`,
-  {
-    logging: false,
-    native: false,
-  }
-);
-
-const basename = path.basename(__filename);
-
-const modelDefiners = [];
-
-fs.readdirSync(path.join(__dirname, "/models"))
-  .filter(
-    (file) =>
-      file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js"
-  )
-  .forEach((file) => {
-    modelDefiners.push(require(path.join(__dirname, "/models", file)));
+// Conecta a MongoDB primero
+mongoose
+  .connect(connectionAddress)
+  .then(() => {
+    console.log("Connected to MongoDB Atlas");
+  })
+  .catch((error) => {
+    console.error("Error connection", error);
   });
-
-modelDefiners.forEach((model) => model(sequelize));
-
-
-
-let entries = Object.entries(sequelize.models);
-let capsEntries = entries.map((entry) => [
-  entry[0][0].toUpperCase() + entry[0].slice(1),
-  entry[1],
-]);
-sequelize.models = Object.fromEntries(capsEntries);
-
-const { User, Measure } = sequelize.models;
-
-// Establecer las relaciones entre los modelos
-User.hasMany(Measure, { foreignKey: 'userId' }); // Un usuario tiene muchas medidas
-Measure.belongsTo(User, { foreignKey: 'userId' }); // Cada medida pertenece a un solo usuario
-
-// Intentar sincronizar cada modelo individualmente
-async function syncTables() {
-  try {
-    await User.sync();
-    console.log("Tabla User creada");
-    await Measure.sync();
-    console.log("Tabla Measure creada");
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-syncTables();
-
-module.exports = {
-  ...sequelize.models,
-  conn: sequelize,
-};
