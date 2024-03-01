@@ -1,5 +1,7 @@
 require("dotenv").config();
 // const { Op } = require("sequelize");
+const mongoose = require("mongoose");
+
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 
@@ -23,11 +25,6 @@ const userCreator = async (req, res) => {
     // mitigatedCarbonFootprint,
     // mitigatedWaterFootprint,
   } = req.body;
-  console.log(name);
-  console.log(email);
-  console.log(password);
-  console.log(country);
-  console.log(province);
   try {
     const newUser = new User({
       name,
@@ -144,21 +141,20 @@ const editUser = async (req, res) => {
 
 const getUser = async (req, res) => {
   const { params } = req;
-
   try {
     let condition = {};
 
-    if (params.id.length !== 36) {
+    if (params.id.length !== 24) {
       condition = {
         ...condition,
         name: { $regex: new RegExp(params.id, "i") },
       };
     }
 
-    if (params.id.length === 36) {
+    if (params.id.length === 24) {
       condition = {
         ...condition,
-        _id: params.id,
+        _id: new mongoose.Types.ObjectId(params.id),
       };
     }
 
@@ -183,9 +179,9 @@ const getAllUsers = async (req, res) => {
 const deleteUserById = async (req, res) => {
   const { id } = req.params;
   try {
-    const response = await User.findByPk(id);
+    const response = await User.findById(id);
     if (response) {
-      await response.remove();
+      await response.deleteOne();
       res.status(201).json("Se ha eliminado el Usuario");
     } else {
       res.status(501).json("No se encontró el Usuario");
