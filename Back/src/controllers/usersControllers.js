@@ -1,11 +1,11 @@
 require("dotenv").config();
-const { Op } = require("sequelize");
+// const { Op } = require("sequelize");
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
-
+console.log(SECRET_KEY);
 const userCreator = async (req, res) => {
   const {
     name,
@@ -64,8 +64,7 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Buscar al usuario en la base de datos
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ email });
 
     if (!user) {
       throw new Error(
@@ -73,17 +72,14 @@ const loginUser = async (req, res) => {
       );
     }
 
-    // Comparar la contraseña proporcionada con la almacenada en la base de datos
     const match = await bcrypt.compare(password, user.password);
 
     if (!match) {
       throw new Error("Contraseña incorrecta.");
     }
 
-    // Si todo va bien, generar un token JWT para el usuario
-    const token = jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: "1h" });
+    const token = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: "1h" });
 
-    // Devolver el token
     return token;
   } catch (error) {
     console.error(error);
@@ -97,45 +93,52 @@ const editUser = async (req, res) => {
     name,
     email,
     password,
-    photo,
-    socialNetwork,
-    productiveActivity,
-    description,
+    // photo,
+    // socialNetwork,
+    // productiveActivity,
+    // description,
     country,
     province,
-    latitude,
-    longitude,
-    videoKey,
-    mitigatedCarbonFootprint,
-    mitigatedWaterFootprint,
+    // latitude,
+    // longitude,
+    // videoKey,
+    // mitigatedCarbonFootprint,
+    // mitigatedWaterFootprint,
   } = req.body;
+
   try {
-    const editee = await User.findByPk(id);
+    // Find the user in the database by id
+    const editee = await User.findById(id);
+
     if (!editee) {
       return res.status(401).json("No se encontró el Usuario");
     }
-    const response = await editee.update({
-      name,
-      email,
-      password,
-      photo,
-      socialNetwork,
-      productiveActivity,
-      description,
-      country,
-      province,
-      latitude,
-      longitude,
-      videoKey,
-      mitigatedCarbonFootprint,
-      mitigatedWaterFootprint,
-    });
-    // Enviar la respuesta desde editUser
+
+    // Update the user fields
+    editee.name = name;
+    editee.email = email;
+    editee.password = password; // Make sure to handle password hashing if needed
+    // editee.photo = photo;
+    // editee.socialNetwork = socialNetwork;
+    // editee.productiveActivity = productiveActivity;
+    // editee.description = description;
+    editee.country = country;
+    editee.province = province;
+    // editee.latitude = latitude;
+    // editee.longitude = longitude;
+    // editee.videoKey = videoKey;
+    // editee.mitigatedCarbonFootprint = mitigatedCarbonFootprint;
+    // editee.mitigatedWaterFootprint = mitigatedWaterFootprint;
+
+    // Save the changes
+    const response = await editee.save();
+
+    // Return the response from editUser
     return res.status(201).json("Usuario editado con éxito");
   } catch (error) {
-    console.log(error);
-    // No envíes la respuesta desde aquí
-    throw error; // Re-lanza el error para que pueda ser manejado por el controlador superior
+    console.error(error);
+    // Do not send the response from here
+    throw error; // Re-throw the error so it can be handled by the higher-level controller
   }
 };
 
@@ -148,35 +151,31 @@ const getUser = async (req, res) => {
     if (params.id.length !== 36) {
       condition = {
         ...condition,
-        name: {
-          [Op.iLike]: `%${params.id}%`,
-        },
+        name: { $regex: new RegExp(params.id, "i") },
       };
     }
 
-    if (params.id.length == 36) {
+    if (params.id.length === 36) {
       condition = {
         ...condition,
-        id: {
-          [Op.eq]: params.id,
-        },
+        _id: params.id,
       };
     }
 
-    const response = await User.findAll({ where: condition });
+    const response = await User.find(condition);
     res.status(201).json(response);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(401).json({ error: error.message });
   }
 };
 
 const getAllUsers = async (req, res) => {
   try {
-    const response = await User.findAll();
+    const response = await User.find();
     res.status(201).json(response);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(401).json({ error: error.message });
   }
 };
@@ -186,10 +185,9 @@ const deleteUserById = async (req, res) => {
   try {
     const response = await User.findByPk(id);
     if (response) {
-      await response.destroy();
+      await response.remove();
       res.status(201).json("Se ha eliminado el Usuario");
-    }
-    if (!response) {
+    } else {
       res.status(501).json("No se encontró el Usuario");
     }
   } catch (error) {
@@ -199,9 +197,9 @@ const deleteUserById = async (req, res) => {
 };
 module.exports = {
   userCreator,
+  loginUser,
   editUser,
   getUser,
   getAllUsers,
   deleteUserById,
-  loginUser,
 };
