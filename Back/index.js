@@ -1,18 +1,22 @@
-require("dotenv").config();
+const server = require("./src/server");
+const mongoose = require("mongoose");
+const PORT = process.env.PORT || 3002;
+const { createServer } = require("node:http");
 
-const server = require("./src/server.js");
-const { conn } = require("./src/db.js");
-const port = process.env.PORT || 3002;
+mongoose
+  .connect(
+    `mongodb+srv://tramabtextil:cPU9hvL7NLrQpnBf@tramab.yr30zqd.mongodb.net/`
+  )
+  .then(() => {
+    console.log("Connected to MongoDB Atlas");
+  })
+  .catch((error) => {
+    console.error("Error connection", error);
+  });
 
-// Syncing all the models at once.
-// conn
-//   .sync({ alter: true })
-//   .then(() => {
-//     server.listen(port, () => {
-//       console.log(`Server at ${port}`); // eslint-disable-line no-console
-//       console.log("Running on port ", port);
-//     });
-//   })
-//   .catch((error) => {
-//     console.error("Unable to sync models:", error);
-//   });
+const httpServer = createServer(server);
+
+console.log(PORT);
+httpServer.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});
