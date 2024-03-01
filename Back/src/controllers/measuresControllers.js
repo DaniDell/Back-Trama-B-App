@@ -1,4 +1,4 @@
-// const { Measure } = require("../db");
+const Measure = require("../models/Measure");
 const { Op } = require("sequelize");
 
 const measureCreator = async (req, res) => {
@@ -12,7 +12,16 @@ const measureCreator = async (req, res) => {
     waterFootprintResult,
   } = req.body;
   try {
-    const response = await Measure.create({
+    const newMeasure = new Measure({
+      userId,
+      deliveryDate,
+      managedCottonBaseKg,
+      managedPolyesterBaseKg,
+      managedMixBaseKg,
+      carbonFootprintResult,
+      waterFootprintResult,
+    });
+    const response = await newMeasure.save({
       userId,
       deliveryDate,
       managedCottonBaseKg,
