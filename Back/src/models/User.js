@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const bcrypt = require("bcryptjs");
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -23,7 +23,7 @@ const userSchema = mongoose.Schema({
     type: Array(String),
   },
   description: {
-    type: String(200),
+    type: String,
   },
   country: String,
   province: String,

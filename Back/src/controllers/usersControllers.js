@@ -1,10 +1,64 @@
-require('dotenv').config();
+require("dotenv").config();
 const { Op } = require("sequelize");
-const { User, conn } = require("../db");
-const bcrypt = require('bcrypt');
+const User = require("../models/User");
+const bcrypt = require("bcrypt");
 
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
+
+const userCreator = async (req, res) => {
+  const {
+    name,
+    email,
+    password,
+    // photo,
+    // socialNetwork,
+    // productiveActivity,
+    // description,
+    country,
+    province,
+    // latitude,
+    // longitude,
+    // videoKey,
+    // mitigatedCarbonFootprint,
+    // mitigatedWaterFootprint,
+  } = req.body;
+  console.log(name);
+  console.log(email);
+  console.log(password);
+  console.log(country);
+  console.log(province);
+  try {
+    const newUser = new User({
+      name,
+      email,
+      password,
+      // photo,
+      // socialNetwork,
+      // productiveActivity,
+      // description,
+      country,
+      province,
+      // latitude,
+      // longitude,
+      // videoKey,
+      // mitigatedCarbonFootprint,
+      // mitigatedWaterFootprint,
+    });
+    const response = await newUser.save();
+
+    res.status(202).json(response);
+  } catch (error) {
+    console.log(error);
+    if (error.name === "SequelizeUniqueConstraintError") {
+      res
+        .status(400)
+        .json({ error: "El mail proporcionado ya se encuentra registrado." });
+    } else {
+      res.status(500).json({ error: error.message });
+    }
+  }
+};
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -14,70 +68,26 @@ const loginUser = async (req, res) => {
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      throw new Error('No se encontró ningún usuario con ese correo electrónico.');
+      throw new Error(
+        "No se encontró ningún usuario con ese correo electrónico."
+      );
     }
 
     // Comparar la contraseña proporcionada con la almacenada en la base de datos
     const match = await bcrypt.compare(password, user.password);
 
     if (!match) {
-      throw new Error('Contraseña incorrecta.');
+      throw new Error("Contraseña incorrecta.");
     }
 
     // Si todo va bien, generar un token JWT para el usuario
-    const token = jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: "1h" });
 
     // Devolver el token
     return token;
-
   } catch (error) {
     console.error(error);
-    throw new Error('Error al iniciar sesión.');
-  }
-};
-
-const userCreator = async (req, res) => {
-  const {
-    name,
-    email,
-    password,
-    photo,
-    socialNetwork,
-    productiveActivity,
-    description,
-    country,
-    province,
-    latitude,
-    longitude,
-    videoKey,
-    mitigatedCarbonFootprint,
-    mitigatedWaterFootprint,
-  } = req.body;
-  try {
-    const response = await User.create({
-      name,
-      email,
-      password,
-      photo,
-      socialNetwork,
-      productiveActivity,
-      description,
-      country,
-      province,
-      latitude,
-      longitude,
-      videoKey,
-      mitigatedCarbonFootprint,
-      mitigatedWaterFootprint,
-    });
-    res.status(202).json(response);
-  } catch (error) {
-    console.log(error);
-    if (error.name === 'SequelizeUniqueConstraintError') {
-      res.status(400).json({ error: 'El mail proporcionado ya se encuentra registrado.' });
-    } else {
-      res.status(500).json({ error: error.message });
-    }
+    throw new Error("Error al iniciar sesión.");
   }
 };
 
@@ -128,8 +138,6 @@ const editUser = async (req, res) => {
     throw error; // Re-lanza el error para que pueda ser manejado por el controlador superior
   }
 };
-
-
 
 const getUser = async (req, res) => {
   const { params } = req;
