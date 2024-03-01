@@ -49,7 +49,7 @@ const measureEditor = async (req, res) => {
   } = req.body;
   try {
     // Buscar la medida por su clave primaria (id)
-    const editee = await Measure.findByPk(id);
+    const editee = await Measure.findById(id);
     // Verificar si la medida existe
     if (!editee) {
       // Si no existe, responder con un error
