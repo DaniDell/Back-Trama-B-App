@@ -111,27 +111,15 @@ const editUser = async (req, res) => {
       return res.status(401).json("No se encontró el Usuario");
     }
 
-    // Update the user fields
     editee.name = name;
     editee.email = email;
-    editee.password = password; // Make sure to handle password hashing if needed
-    // editee.photo = photo;
-    // editee.socialNetwork = socialNetwork;
-    // editee.productiveActivity = productiveActivity;
-    // editee.description = description;
+    editee.password = password;
     editee.country = country;
     editee.province = province;
-    // editee.latitude = latitude;
-    // editee.longitude = longitude;
-    // editee.videoKey = videoKey;
-    // editee.mitigatedCarbonFootprint = mitigatedCarbonFootprint;
-    // editee.mitigatedWaterFootprint = mitigatedWaterFootprint;
 
-    // Save the changes
     const response = await editee.save();
 
-    // Return the response from editUser
-    return res.status(201).json("Usuario editado con éxito");
+    return res.status(201).json("Usuario editado con éxito" + response);
   } catch (error) {
     console.error(error);
     // Do not send the response from here
