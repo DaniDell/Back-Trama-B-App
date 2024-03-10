@@ -1,40 +1,33 @@
-const { DataTypes } = require("sequelize");
+const mongoose = require("mongoose");
 
-module.exports = (sequelize) => {
-  sequelize.define("measure", {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      allowNull: false,
-      primaryKey: true,
-    },
-    userId: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
-    deliveryDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    managedCottonBaseKg: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-    managedPolyesterBaseKg: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-    managedMixBaseKg: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-    carbonFootprintResult: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-    waterFootprintResult: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-  });
-};
+const measureSchema = new mongoose.Schema({
+  userId: {
+    type: String,
+    required: true,
+  },
+  deliveryDate: {
+    type: Date,
+    required: true,
+  },
+  managedCottonBaseKg: {
+    type: Number,
+    required: true,
+  },
+  managedPolyesterBaseKg: {
+    type: Number,
+    required: true,
+  },
+  managedMixBaseKg: {
+    type: Number,
+    required: true,
+  },
+  carbonFootprintResult: {
+    type: Number,
+    required: true,
+  },
+  waterFootprintResult: {
+    type: Number,
+    required: true,
+  },
+});
+module.exports = mongoose.model("Measure", measureSchema);

@@ -1,76 +1,59 @@
-require('dotenv').config();
-const { DataTypes } = require("sequelize");
-const bcrypt = require('bcrypt');
-const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS) ; 
+const mongoose = require("mongoose");
 
-module.exports = (sequelize) => {
-  const User = sequelize.define(
-    "user",
-    {
-      id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        allowNull: false,
-        primaryKey: true,
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-        validate: {
-          isEmail: true,
-        },
-      },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      photo: { type: DataTypes.STRING },
-      socialNetwork: { type: DataTypes.STRING },
-      productiveActivity: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
-      },
-      description: {
-        type: DataTypes.STRING(200),
-      },
-      country: DataTypes.STRING,
-      province: DataTypes.STRING,
-      latitude: DataTypes.FLOAT,
-      longitude: DataTypes.FLOAT,
-      videoKey: DataTypes.STRING,
-      mitigatedCarbonFootprint: DataTypes.FLOAT,
-      mitigatedWaterFootprint: DataTypes.FLOAT,
-    },
-    { 
-      timestamps: false,
-      hooks: {
-        beforeCreate: async (user) => {
-          const salt = await bcrypt.genSalt(saltRounds);
-          user.password = await bcrypt.hash(user.password, salt);
-        },
-        beforeUpdate: async (user) => {
-          if (user.changed('password')) {
-            const salt = await bcrypt.genSalt(saltRounds);
-            user.password = await bcrypt.hash(user.password, salt);
-          }
-        },
-      }
-    }
-  );
+const bcrypt = require("bcryptjs");
 
-  User.prototype.isValidPassword = async function(password) {
-    return await bcrypt.compare(password, this.password);
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    // (unique?)
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+
+  photo: { type: String },
+  socialNetwork: { type: String },
+  productiveActivity: {
+    type: Array(String),
+  },
+  description: {
+    type: String,
+  },
+  country: String,
+  province: String,
+  latitude: Number,
+  longitude: Number,
+  videoKey: String,
+  mitigatedCarbonFootprint: Number,
+  mitigatedWaterFootprint: Number,
+});
+
+userSchema.pre("save", function (next) {
+  const admin = this;
+
+  if (!admin.isModified("password")) {
+    return next();
   }
 
-  User.prototype.toJSON = function () {
-    const values = { ...this.get() };
-    delete values.password;
-    return values;
-  };
+  bcrypt.genSalt(10, (err, salt) => {
+    if (err) {
+      return next(err);
+    }
 
-  return User;
-};
+    bcrypt.hash(admin.password, salt, (err, hash) => {
+      if (err) {
+        return next(err);
+      }
+      admin.password = hash;
+      next();
+    });
+  });
+});
+
+module.exports = mongoose.model("User", userSchema);

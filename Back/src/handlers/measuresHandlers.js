@@ -2,7 +2,7 @@ const {
   measureCreator,
   measureEditor,
   getMeasure,
-  getAllByX,
+  // getAllByX,
   deleteMeasure,
 } = require("../controllers/measuresControllers");
 
@@ -30,14 +30,14 @@ const getMeasureHandler = async (req, res) => {
     res.status(401).json("No se encontró el registro");
   }
 };
-const getAllByXHandler = async (req, res) => {
-  try {
-    const response = await getAllByX(req, res);
-    res.status(201).json(response);
-  } catch (error) {
-    res.status(401).json("No hay registros con los datos solicitados");
-  }
-};
+// const getAllByXHandler = async (req, res) => {
+//   try {
+//     const response = await getAllByX(req, res);
+//     res.status(201).json(response);
+//   } catch (error) {
+//     res.status(401).json("No hay registros con los datos solicitados");
+//   }
+// };
 const deleteMeasureHandler = async (req, res) => {
   try {
     const response = await deleteMeasure(req, res);
@@ -50,6 +50,6 @@ module.exports = {
   measureCreatorHandler,
   measureEditorHandler,
   getMeasureHandler,
-  getAllByXHandler,
+  // getAllByXHandler,
   deleteMeasureHandler,
 };

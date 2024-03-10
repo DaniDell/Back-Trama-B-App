@@ -1,7 +1,9 @@
 ## General Description
+
 This project is a web application developed with Node.js and Express, providing a RESTful API for managing sustainability measures taken by users. Users can record measures related to material management and obtain information about the measures taken.
 
 ## Project Structure
+
 The project follows an organized structure as follows:
 
 - **controllers/**: Contains the controllers for each model.
@@ -13,10 +15,11 @@ The project follows an organized structure as follows:
 - **package.json**: npm configuration file.
 
 ## API Usage
+
 The API provides the following routes for managing measures and users:
 
-
 ### Users Routes
+
 - `POST /users/create`: Creates a new user.
 - `PUT /users/edit`: Edits an existing user.
 - `GET /users/:id`: Gets user information by ID.
@@ -25,17 +28,16 @@ The API provides the following routes for managing measures and users:
 - `POST /users/login`: Give access to registered users.
 
 ### Measures Routes
+
 - `POST /measures/create`: Creates a new measure.
 - `PUT /measures/edit`: Edits an existing measure.
 - `GET /measures/:id`: Gets a measure by its ID.
 - `GET /measures/getby`: Gets measures according to different criteria (see details in the implementation).
 
-
 ## JSON Examples for Testing
 
-
-
 ### Create a User
+
 ```json
 {
   "name": "Test User",
@@ -47,6 +49,7 @@ The API provides the following routes for managing measures and users:
 ```
 
 ### Edit a User
+
 ```json
 {
   "id": "5f5adfe5-7fc8-4db1-9a14-094341812b4c",
@@ -57,7 +60,8 @@ The API provides the following routes for managing measures and users:
 }
 ```
 
-###  User login
+### User login
+
 ```json
 {
   "email": "user@example.com",
@@ -66,16 +70,19 @@ The API provides the following routes for managing measures and users:
 ```
 
 ### Get User by ID
+
 Send a GET request to `/users/5f5adfe5-7fc8-4db1-9a14-094341812b4c`.
 
 ### Get All Users
+
 Send a GET request to `/users`.
 
 ### Delete a User
+
 Send a DELETE request to `/users/delete/5f5adfe5-7fc8-4db1-9a14-094341812b4c`.
 
-
 ### Create a Measure
+
 ```json
 {
   "userId": "5f5adfe5-7fc8-4db1-9a14-094341812b4c",
@@ -89,6 +96,7 @@ Send a DELETE request to `/users/delete/5f5adfe5-7fc8-4db1-9a14-094341812b4c`.
 ```
 
 ### Edit a Measure
+
 ```json
 {
   "id": "3a9b7d10-0f20-41c6-929d-1944f2aeed33",
@@ -102,10 +110,13 @@ Send a DELETE request to `/users/delete/5f5adfe5-7fc8-4db1-9a14-094341812b4c`.
 ```
 
 ### Get Measure by ID
+
 Send a GET request to `/measures/3a9b7d10-0f20-41c6-929d-1944f2aeed33`.
 
 ### Get All Measures for a User
+
 Send a GET request to `/measures/getby` with the following JSON in the body:
+
 ```json
 {
   "userId": "5f5adfe5-7fc8-4db1-9a14-094341812b4c"
