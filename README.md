@@ -1,13 +1,13 @@
 ## General Description
 
-This project is a web application developed with Node.js and Express, providing a RESTful API for managing sustainability measures taken by users. Users can record measures related to material management and obtain information about the measures taken.
+This project is a web application developed with Node.js and Express, providing a RESTful API for managing sustainability measures taken by users. Users can record measures related to material management and obtain information about the measures taken. The application uses MongoDB as its database, with Mongoose as the ODM.
 
 ## Project Structure
 
 The project follows an organized structure as follows:
 
 - **controllers/**: Contains the controllers for each model.
-- **db/**: Contains the database configuration and Sequelize models.
+- **db/**: Contains the database configuration and Mongoose models.
 - **handlers/**: Contains the handlers for each controller, managing HTTP requests and responses.
 - **routers/**: Defines the application routes.
 - **.env**: Configuration file for environment variables.
@@ -46,7 +46,6 @@ The API provides the following routes for managing measures and users:
   "country": "Argentina",
   "province": "Buenos Aires"
 }
-```
 
 ### Edit a User
 

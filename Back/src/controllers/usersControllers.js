@@ -1,5 +1,4 @@
 require("dotenv").config();
-// const { Op } = require("sequelize");
 const mongoose = require("mongoose");
 
 const User = require("../models/User");
@@ -7,7 +6,11 @@ const bcrypt = require("bcrypt");
 
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
-console.log(SECRET_KEY);
+if (SECRET_KEY) {
+  console.log('OK');
+} else {
+  console.log('SECRET_KEY is not set');
+}
 const userCreator = async (req, res) => {
   const {
     name,
@@ -47,7 +50,7 @@ const userCreator = async (req, res) => {
     res.status(202).json(response);
   } catch (error) {
     console.log(error);
-    if (error.name === "SequelizeUniqueConstraintError") {
+    if (error.name === "UniqueConstraintError") {
       res
         .status(400)
         .json({ error: "El mail proporcionado ya se encuentra registrado." });
