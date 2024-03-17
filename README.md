@@ -187,4 +187,75 @@ fetch('https://api.example.com/secure-route', {
   .catch(error => console.error('Error:', error));
 
 
+# README: Authentication with JWT
+
+Our API uses JWT (JSON Web Tokens) for authenticating user requests. This document outlines how JWT authentication works in our application and how to store and use tokens for future requests.
+
+## Obtaining the Token
+
+When a user successfully logs in, the API returns a token in the `token` field of the JSON response.
+
+## Storing the Token
+
+The client must store this token for use in future requests requiring authentication. Here are two recommended methods for storing the token:
+
+### Storing in Redux
+
+If your application uses Redux for state management, you can store the token in the Redux state. Below is a basic example of how to do this:
+
+```javascript
+// In your Redux action
+export const setAuthToken = (token) => ({
+  type: 'SET_AUTH_TOKEN',
+  payload: token
+});
+
+// In your Redux reducer
+const initialState = {
+  authToken: null
+};
+
+const authReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'SET_AUTH_TOKEN':
+      return {
+        ...state,
+        authToken: action.payload
+      };
+    default:
+      return state;
+  }
+};
+```
+
+### Storing in Browser Cache
+
+If you prefer not to use Redux or if token storage doesn't need to be shared between multiple components, you can use the browser's `localStorage` or `sessionStorage` API. Here's a basic example of how to do this:
+
+```javascript
+// Storing the token in localStorage
+localStorage.setItem('authToken', token);
+
+// Retrieving the token from localStorage
+const authToken = localStorage.getItem('authToken');
+```
+
+## Using the Token
+
+To authenticate HTTP requests, the client must include the token in the Authorization header in the format `Bearer {token}`. Below is an example of how to do this using the `fetch` function:
+
+```javascript
+fetch('https://api.example.com/resource', {
+  method: 'GET',
+  headers: {
+    'Authorization': `Bearer ${authToken}`,
+    'Content-Type': 'application/json'
+  }
+})
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(error => console.error('Error:', error));
+```
+
+
 
