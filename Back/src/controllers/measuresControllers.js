@@ -78,6 +78,16 @@ const getMeasure = async (req, res) => {
     res.status(401).json({ error: message.error });
   }
 };
+const getAllByUserId = async (req, res) => {
+  const { userId } = req.body;
+  try {
+    const response = await Measure.find({ userId: userId });
+    res.status(201).json(response);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
 
 // const getAllByX = async (req, res) => {
 //   const {
@@ -158,6 +168,7 @@ module.exports = {
   measureCreator,
   measureEditor,
   getMeasure,
+  getAllByUserId,
   // getAllByX,
   deleteMeasure,
 };
