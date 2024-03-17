@@ -1,5 +1,6 @@
 const Measure = require("../models/Measure");
-const { Op } = require("sequelize");
+// const { Op } = require("sequelize");
+const mongoose = require("mongoose");
 
 const measureCreator = async (req, res) => {
   const {
@@ -71,12 +72,13 @@ const measureEditor = async (req, res) => {
 const getMeasure = async (req, res) => {
   const { id } = req.params;
   try {
-    const response = await Measure.find(id);
+    const response = await Measure.findById(id);
     res.status(201).json(response);
   } catch (error) {
     res.status(401).json({ error: message.error });
   }
 };
+
 // const getAllByX = async (req, res) => {
 //   const {
 //     userId,
