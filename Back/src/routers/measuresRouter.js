@@ -16,7 +16,7 @@ measuresRouter.post(
 );
 measuresRouter.put("/edit", authenticateUser, measureEditorHandler);
 // measuresRouter.get("/getby", authenticateUser, getAllByXHandler);
-measuresRouter.get("/:id", authenticateUser, getMeasureHandler);
+measuresRouter.get("/:id", getMeasureHandler);
 measuresRouter.delete("/:id", authenticateUser, deleteMeasureHandler);
 
 module.exports = measuresRouter;
