@@ -6,7 +6,9 @@ const PORT = process.env.PORT || 3002;
 const { createServer } = require("node:http");
 
 // Configura CORS
-server.use(cors());
+server.use(cors({
+  origin: 'http://localhost:5173'
+}));
 
 mongoose
   .connect(
