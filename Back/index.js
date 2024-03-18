@@ -1,8 +1,12 @@
 require('dotenv').config();
 const server = require("./src/server");
 const mongoose = require("mongoose");
+const cors = require('cors'); // Importa el paquete cors
 const PORT = process.env.PORT || 3002;
 const { createServer } = require("node:http");
+
+// Configura CORS
+server.use(cors());
 
 mongoose
   .connect(
