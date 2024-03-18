@@ -1,3 +1,4 @@
+require('dotenv').config();
 const server = require("./src/server");
 const mongoose = require("mongoose");
 const PORT = process.env.PORT || 3002;
@@ -5,7 +6,7 @@ const { createServer } = require("node:http");
 
 mongoose
   .connect(
-    `mongodb+srv://tramabtextil:cPU9hvL7NLrQpnBf@tramab.yr30zqd.mongodb.net/`
+    process.env.MONGODB_URL
   )
   .then(() => {
     console.log("Connected to MongoDB Atlas");

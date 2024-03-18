@@ -1,18 +1,27 @@
-## General Description
+# Trama B App
 
-This project is a web application developed with Node.js and Express, providing a RESTful API for managing sustainability measures taken by users. Users can record measures related to material management and obtain information about the measures taken.
+This project is a web application developed with Node.js and Express, providing a RESTful API for managing sustainability measures taken by users. Users can record measures related to material management and obtain information about the measures taken. The application uses MongoDB as its database, with Mongoose as the ODM.
 
 ## Project Structure
 
 The project follows an organized structure as follows:
 
 - **controllers/**: Contains the controllers for each model.
-- **db/**: Contains the database configuration and Sequelize models.
+- **db/**: Contains the database configuration and Mongoose models.
 - **handlers/**: Contains the handlers for each controller, managing HTTP requests and responses.
 - **routers/**: Defines the application routes.
 - **.env**: Configuration file for environment variables.
 - **app.js**: Main application file.
 - **package.json**: npm configuration file.
+
+## Getting Started
+
+Follow these steps to set up and run the project locally:
+
+1. Clone this repository.
+2. Install dependencies using `npm install`.
+3. Set up environment variables by creating a `.env` file based on the provided `.env.example`.
+4. Start the server using `npm start`.
 
 ## API Usage
 
@@ -25,7 +34,7 @@ The API provides the following routes for managing measures and users:
 - `GET /users/:id`: Gets user information by ID.
 - `GET /users`: Gets all users.
 - `DELETE /users/delete/:id`: Deletes a user by ID.
-- `POST /users/login`: Give access to registered users.
+- `POST /users/login`: Allows registered users to log in and obtain an authentication token.
 
 ### Measures Routes
 
@@ -35,6 +44,8 @@ The API provides the following routes for managing measures and users:
 - `GET /measures/getby`: Gets measures according to different criteria (see details in the implementation).
 
 ## JSON Examples for Testing
+
+Here are some JSON examples to test the API endpoints:
 
 ### Create a User
 
@@ -122,3 +133,129 @@ Send a GET request to `/measures/getby` with the following JSON in the body:
   "userId": "5f5adfe5-7fc8-4db1-9a14-094341812b4c"
 }
 ```
+
+# Authentication
+
+This API uses JSON Web Tokens (JWT) for authentication. Certain endpoints require a valid JWT in the request's authorization header.
+
+## Obtaining a JWT
+
+To obtain a JWT, you need to authenticate using the `POST /users/login` endpoint. Upon successful authentication, a JWT is returned in the response. This token should be stored securely on the client-side and included in the authorization header of each subsequent request.
+
+Here's an example of how to include the JWT in the authorization header:
+
+```plaintext
+Authorization: Bearer <token>
+
+Replace <token> with the JWT obtained after successful login.
+
+Using the Authentication Middleware
+The authenticateUser middleware is provided for verifying and decoding the JWT from the authorization header of incoming requests. If the token verification is successful, the middleware attaches the decoded user information to the request object (req.user), which can then be accessed by subsequent route handlers.
+
+Include the authenticateUser middleware in routes that require authentication. Here's an example:
+
+const jwt = require('jsonwebtoken');
+const authenticateUser = require('./path/to/authenticateUser');
+
+// Example of using the authentication middleware in routes
+app.get('/secure-route', authenticateUser, (req, res) => {
+  // Access user info via req.user
+});
+
+Secure Routes
+Routes that require authentication should include the authenticateUser middleware. This ensures that only authenticated users can access these routes.
+
+For example, the /secure-route endpoint requires authentication. Include the JWT in the authorization header of the request to access it.
+
+Here's an example of a secure GET request requiring authentication:
+
+const jwt = require('jsonwebtoken');
+const authenticateUser = require('./path/to/authenticateUser');
+
+// Get the JWT token after authentication
+const token = '...'; // Get the JWT token from the response after login
+
+// Example of a secure GET request requiring authentication
+fetch('https://api.example.com/secure-route', {
+  method: 'GET',
+  headers: {
+    'Authorization': `Bearer ${token}` // Include the JWT token in the authorization header
+  }
+})
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+
+
+# README: Authentication with JWT
+
+Our API uses JWT (JSON Web Tokens) for authenticating user requests. This document outlines how JWT authentication works in our application and how to store and use tokens for future requests.
+
+## Obtaining the Token
+
+When a user successfully logs in, the API returns a token in the `token` field of the JSON response.
+
+## Storing the Token
+
+The client must store this token for use in future requests requiring authentication. Here are two recommended methods for storing the token:
+
+### Storing in Redux
+
+If your application uses Redux for state management, you can store the token in the Redux state. Below is a basic example of how to do this:
+
+```javascript
+// In your Redux action
+export const setAuthToken = (token) => ({
+  type: 'SET_AUTH_TOKEN',
+  payload: token
+});
+
+// In your Redux reducer
+const initialState = {
+  authToken: null
+};
+
+const authReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'SET_AUTH_TOKEN':
+      return {
+        ...state,
+        authToken: action.payload
+      };
+    default:
+      return state;
+  }
+};
+```
+
+### Storing in Browser Cache
+
+If you prefer not to use Redux or if token storage doesn't need to be shared between multiple components, you can use the browser's `localStorage` or `sessionStorage` API. Here's a basic example of how to do this:
+
+```javascript
+// Storing the token in localStorage
+localStorage.setItem('authToken', token);
+
+// Retrieving the token from localStorage
+const authToken = localStorage.getItem('authToken');
+```
+
+## Using the Token
+
+To authenticate HTTP requests, the client must include the token in the Authorization header in the format `Bearer {token}`. Below is an example of how to do this using the `fetch` function:
+
+```javascript
+fetch('https://api.example.com/resource', {
+  method: 'GET',
+  headers: {
+    'Authorization': `Bearer ${authToken}`,
+    'Content-Type': 'application/json'
+  }
+})
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(error => console.error('Error:', error));
+```
+
+
+

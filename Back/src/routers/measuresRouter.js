@@ -12,7 +12,7 @@ const measuresRouter = Router();
 
 measuresRouter.post(
   "/create",
-  //  authenticateUser,
+  authenticateUser,
   measureCreatorHandler
 );
 measuresRouter.put("/edit", authenticateUser, measureEditorHandler);

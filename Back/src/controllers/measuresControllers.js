@@ -78,6 +78,7 @@ const getMeasure = async (req, res) => {
     res.status(401).json({ error: message.error });
   }
 };
+
 const getAllByUserId = async (req, res) => {
   const { userId } = req.body;
   try {
@@ -88,6 +89,7 @@ const getAllByUserId = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // const getAllByX = async (req, res) => {
 //   const {
