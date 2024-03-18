@@ -3,6 +3,7 @@ const {
   measureCreatorHandler,
   measureEditorHandler,
   getMeasureHandler,
+  getAllByUserIdHandler,
   // getAllByXHandler,
   deleteMeasureHandler,
 } = require("../handlers/measuresHandlers");
@@ -15,8 +16,9 @@ measuresRouter.post(
   measureCreatorHandler
 );
 measuresRouter.put("/edit", authenticateUser, measureEditorHandler);
-// measuresRouter.get("/getby", authenticateUser, getAllByXHandler);
-measuresRouter.get("/:id", authenticateUser, getMeasureHandler);
+measuresRouter.get("/getby", getAllByUserIdHandler);
+// measuresRouter.get("/getbyX", authenticateUser, getAllByXHandler);
+measuresRouter.get("/:id", getMeasureHandler);
 measuresRouter.delete("/:id", authenticateUser, deleteMeasureHandler);
 
 module.exports = measuresRouter;
