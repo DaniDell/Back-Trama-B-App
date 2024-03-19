@@ -6,12 +6,19 @@ const PORT = process.env.PORT || 3002;
 const { createServer } = require("node:http");
 
 // Configura CORS
-server.use(cors({
+server.options('*', cors({
   origin: 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   preflightContinue: true
 }));
+
+// Middleware personalizado para imprimir un mensaje en la consola
+server.use((req, res, next) => {
+  console.log(`Received ${req.method} request from ${req.origin} for ${req.path}`);
+  next();
+});
+
 mongoose
   .connect(
     process.env.MONGODB_URL
