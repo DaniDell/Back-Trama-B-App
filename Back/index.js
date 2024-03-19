@@ -7,9 +7,11 @@ const { createServer } = require("node:http");
 
 // Configura CORS
 server.use(cors({
-  origin: 'http://localhost:5173'
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  preflightContinue: true
 }));
-
 mongoose
   .connect(
     process.env.MONGODB_URL
