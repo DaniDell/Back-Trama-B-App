@@ -50,7 +50,7 @@ const userCreator = async (req, res) => {
     res.status(202).json(response);
   } catch (error) {
     console.log(error);
-    if (error instanceof mongoose.Error && error.code === 11000) {
+    if (error.name === 'MongoServerError' && error.code === 11000) {
       res
         .status(400)
         .json({ error: "El mail proporcionado ya se encuentra registrado." });
