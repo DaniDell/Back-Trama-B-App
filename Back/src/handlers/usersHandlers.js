@@ -13,7 +13,7 @@ const userCreatorHandler = async (req, res) => {
     const response = await userCreator(req, res);
     res.status(201).json(response);
   } catch (error) {
-    if (error.name === 'UniqueConstraintError') {
+    if (error.name === 'MongoServerError' && error.code === 11000) {
       res.status(400).json({ error: 'El mail registrado ya se encuentra ingresado en nuestra base de datos.' });
     } else {
       res.status(500).json({ error: 'Ha ocurrido un error inesperado.' });
