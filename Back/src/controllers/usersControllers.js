@@ -11,27 +11,54 @@ if (SECRET_KEY) {
 } else {
   console.log('SECRET_KEY is not set');
 }
-try {
-  const newUser = new User({
+const userCreator = async (req, res) => {
+  const {
     name,
     email,
     password,
+    // photo,
+    // socialNetwork,
+    // productiveActivity,
+    // description,
     country,
     province,
-  });
-  const response = await newUser.save();
+    // latitude,
+    // longitude,
+    // videoKey,
+    // mitigatedCarbonFootprint,
+    // mitigatedWaterFootprint,
+  } = req.body;
+  try {
+    const newUser = new User({
+      name,
+      email,
+      password,
+      // photo,
+      // socialNetwork,
+      // productiveActivity,
+      // description,
+      country,
+      province,
+      // latitude,
+      // longitude,
+      // videoKey,
+      // mitigatedCarbonFootprint,
+      // mitigatedWaterFootprint,
+    });
+    const response = await newUser.save();
 
-  res.status(202).json(response);
-} catch (error) {
-  console.log(error);
-  if (error instanceof mongoose.Error && error.code === 11000) {
-    res
-      .status(400)
-      .json({ error: "El mail proporcionado ya se encuentra registrado." });
-  } else {
-    res.status(500).json({ error: error.message });
+    res.status(202).json(response);
+  } catch (error) {
+    console.log(error);
+    if (error instanceof mongoose.Error && error.code === 11000) {
+      res
+        .status(400)
+        .json({ error: "El mail proporcionado ya se encuentra registrado." });
+    } else {
+      res.status(500).json({ error: error.message });
+    }
   }
-}
+};
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
