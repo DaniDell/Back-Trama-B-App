@@ -83,7 +83,7 @@ const loginUser = async (req, res) => {
     return token;
   } catch (error) {
     console.error(error);
-    throw new Error("Error al iniciar sesión.");
+    throw error;
   }
 };
 
