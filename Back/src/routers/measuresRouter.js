@@ -12,7 +12,7 @@ const measuresRouter = Router();
 
 measuresRouter.post("/create", authenticateUser, measureCreatorHandler);
 measuresRouter.put("/edit", authenticateUser, measureEditorHandler);
-measuresRouter.get("/getby", authenticateUser, getAllByUserIdHandler);
+measuresRouter.get("/getby",  getAllByUserIdHandler);
 // measuresRouter.get("/getbyX", authenticateUser, getAllByXHandler);
 measuresRouter.get("/:id", authenticateUser, getMeasureHandler);
 measuresRouter.delete("/:id", authenticateUser, deleteMeasureHandler);
