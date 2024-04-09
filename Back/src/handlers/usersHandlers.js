@@ -58,13 +58,13 @@ const deleteUserByIdHandler = async (req, res) => {
 };
 const loginUserHandler = async (req, res) => {
   try {
-    const { token, userId } = await loginUser(req);
+    const { token, userId } = await loginUser(req, res);
     res.status(200).json({ token, userId });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: error.message }); 
   }
-};
+}; 
 
 module.exports = {
   userCreatorHandler,
