@@ -79,10 +79,14 @@ const getMeasure = async (req, res) => {
 };
 
 const getAllByUserId = async (req, res) => {
-  const { userId } = req.body;
+  const { userId } = req.query; // Cambia req.body a req.query para obtener el userId de los query parameters
   try {
     const response = await Measure.find({ userId: userId });
-    res.status(201).json(response);
+    if (response.length > 0) {
+      res.status(201).json(response); // Cambia el estado a 200 si se encuentran registros
+    } else {
+      res.status(404).json("No se encontraron registros para el userId proporcionado");
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
