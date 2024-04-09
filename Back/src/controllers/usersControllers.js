@@ -78,7 +78,7 @@ const loginUser = async (req, res) => {
       throw new Error("Contraseña incorrecta.");
     }
 
-    const token = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: "1h" });
+    const token = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: "6h" });
 
     // Establece el estado a 200 (OK) y devuelve el token y el ID del usuario en la respuesta
     res.status(200).json({ token, userId: user._id });
