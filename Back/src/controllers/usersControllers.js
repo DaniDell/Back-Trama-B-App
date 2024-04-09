@@ -81,7 +81,7 @@ const loginUser = async (req, res) => {
     const token = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: "1h" });
 
     // Devuelve el token y el ID del usuario en la respuesta
-    res.json({ token, userId: user._id });
+    return res.json({ token, userId: user._id });
   } catch (error) {
     console.error(error);
     // En lugar de lanzar el error, envía una respuesta de error
