@@ -60,31 +60,17 @@ const userCreator = async (req, res) => {
   }
 };
 
-const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-
+const loginUserHandler = async (req, res) => {
   try {
-    const user = await User.findOne({ email });
+    // Lógica de inicio de sesión
 
-    if (!user) {
-      throw new Error(
-        "No se encontró ningún usuario con ese correo electrónico."
-      );
-    }
-
-    const match = await bcrypt.compare(password, user.password);
-
-    if (!match) {
-      throw new Error("Contraseña incorrecta.");
-    }
-
-    const token = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: "1h" });
-
-    // Devuelve el token y el ID del usuario en la respuesta
-    res.json({ token, userId: user._id });
+    // Si todo va bien, envía la respuesta y retorna
+    return res.json({ token, userId: user._id });
   } catch (error) {
     console.error(error);
-    throw error;
+
+    // Si algo sale mal, envía una respuesta de error y retorna
+    return res.status(500).json({ error: 'An error occurred' });
   }
 };
 
