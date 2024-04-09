@@ -80,7 +80,8 @@ const loginUser = async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: "1h" });
 
-    return token;
+    // Devuelve el token y el ID del usuario en la respuesta
+    res.json({ token, userId: user._id });
   } catch (error) {
     console.error(error);
     throw error;
