@@ -80,12 +80,10 @@ const loginUser = async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: "6h" });
 
-    // Establece el estado a 200 (OK) y devuelve el token y el ID del usuario en la respuesta
-    res.status(200).json({ token, userId: user._id });
+    // Devuelve el token y el ID del usuario
+    return { token, userId: user._id };
   } catch (error) {
     console.error(error);
-    // Establece el estado a 500 (Error interno del servidor) antes de lanzar el error
-    res.status(500);
     throw error;
   }
 };
