@@ -6,6 +6,9 @@ const server = express();
 
 const PORT = process.env.PORT || 3002;
 
+// Importa tus routers
+const routers = require('./routers/index');
+
 // Configuración de CORS
 const corsOptions = {
   origin: ['https://hebra-circular.vercel.app', process.env.LOCAL_URL],
@@ -17,6 +20,14 @@ const corsOptions = {
 
 // Aplicar middleware CORS
 server.use(cors(corsOptions));
+
+// Asegúrate de que estás utilizando este middleware
+server.use(express.json());
+
+// Usa tus routers
+server.use('/users', routers.usersRouter);
+server.use('/measures', routers.measuresRouter);
+
 
 // Middleware personalizado para imprimir un mensaje en la consola
 server.use((req, res, next) => {
