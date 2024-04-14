@@ -1,24 +1,22 @@
 require('dotenv').config();
-const server = require("./src/server");
-const mongoose = require("mongoose");
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const server = express();
+
 const PORT = process.env.PORT || 3002;
 
-const allowedOrigins = ['https://hebra-circular.vercel.app', process.env.LOCAL_URL];
+// Configuración de CORS
+const corsOptions = {
+  origin: ['https://hebra-circular.vercel.app', process.env.LOCAL_URL],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, // Permite cookies
+  optionsSuccessStatus: 200 // Algunos navegadores antiguos (IE11, varios SmartTVs) se ahogan con 204
+};
 
-server.use((req, res, next) => {
-  const origin = req.headers.origin;
-  console.log(`Origin: ${origin}`); // Imprimir el origen de la solicitud
-
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    console.log(`Access-Control-Allow-Origin set to ${origin}`); // Imprimir la cabecera que se está estableciendo
-  }
-
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-  next();
-});
+// Aplicar middleware CORS
+server.use(cors(corsOptions));
 
 // Middleware personalizado para imprimir un mensaje en la consola
 server.use((req, res, next) => {
