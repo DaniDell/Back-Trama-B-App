@@ -8,7 +8,7 @@ const { createServer } = require("node:http");
 
 // Configura CORS
 server.use(cors({
-  origin: [process.env.DEPLOY_URL, process.env.LOCAL_URL],
+  origin: ['https://hebra-circular.vercel.app/',process.env.DEPLOY_URL, process.env.LOCAL_URL],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   preflightContinue: true
