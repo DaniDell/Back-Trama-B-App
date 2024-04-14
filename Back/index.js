@@ -20,7 +20,9 @@ server.use(cors(corsOptions));
 
 // Middleware personalizado para imprimir un mensaje en la consola
 server.use((req, res, next) => {
-  console.log(`Received ${req.method} request from ${req.origin} for ${req.path}`);
+  console.log(`Received ${req.method} request from ${req.headers.origin} for ${req.path}`);
+  console.log('Headers:', req.headers);
+  console.log('Body:', req.body);
   next();
 });
 
