@@ -7,9 +7,13 @@ const allowedOrigins = ['https://hebra-circular.vercel.app', process.env.LOCAL_U
 
 server.use((req, res, next) => {
   const origin = req.headers.origin;
+  console.log(`Origin: ${origin}`); // Imprimir el origen de la solicitud
+
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
+    console.log(`Access-Control-Allow-Origin set to ${origin}`); // Imprimir la cabecera que se está estableciendo
   }
+
   res.header('Access-Control-Allow-Credentials', 'true');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
