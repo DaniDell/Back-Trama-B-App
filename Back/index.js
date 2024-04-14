@@ -28,13 +28,13 @@ server.use(express.json());
 server.use('/users', usersRouter);
 server.use('/measures', measuresRouter);
 
-// Middleware personalizado para imprimir un mensaje en la consola
-server.use((req, res, next) => {
-  console.log(`Received ${req.method} request from ${req.headers.origin} for ${req.path}`);
-  console.log('Headers:', req.headers);
-  console.log('Body:', req.body);
-  next();
-});
+// // Middleware personalizado para imprimir un mensaje en la consola
+// server.use((req, res, next) => {
+//   console.log(`Received ${req.method} request from ${req.headers.origin} for ${req.path}`);
+//   console.log('Headers:', req.headers);
+//   console.log('Body:', req.body);
+//   next();
+// });
 
 mongoose
   .connect(
