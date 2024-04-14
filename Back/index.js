@@ -1,15 +1,20 @@
 require('dotenv').config();
 const server = require("./src/server");
 const mongoose = require("mongoose");
-const cors = require('cors'); // Importa el paquete cors
 const PORT = process.env.PORT || 3002;
 
-server.use(cors({
-  origin: ['https://hebra-circular.vercel.app', process.env.LOCAL_URL],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  preflightContinue: true
-}));
+const allowedOrigins = ['https://hebra-circular.vercel.app', process.env.LOCAL_URL];
+
+server.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  next();
+});
 
 // Middleware personalizado para imprimir un mensaje en la consola
 server.use((req, res, next) => {
