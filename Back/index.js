@@ -2,9 +2,12 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const server = require("./src/server");
-const { createServer } = require("node:http");
+const server = express();
+const usersRouter = require("./src/routers/usersRouter");
+const measuresRouter = require("./src/routers/measuresRouter");
 const PORT = process.env.PORT || 3002;
+
+
 
 // Configuración de CORS
 const corsOptions = {
@@ -18,6 +21,13 @@ const corsOptions = {
 // Aplicar middleware CORS
 server.use(cors(corsOptions));
 
+// Asegúrate de que estás utilizando este middleware
+server.use(express.json());
+
+// Usa tus routers
+server.use('/users', usersRouter);
+server.use('/measures', measuresRouter);
+
 // Middleware personalizado para imprimir un mensaje en la consola
 server.use((req, res, next) => {
   console.log(`Received ${req.method} request from ${req.headers.origin} for ${req.path}`);
@@ -25,8 +35,6 @@ server.use((req, res, next) => {
   console.log('Body:', req.body);
   next();
 });
-
-const httpServer = createServer(server);
 
 mongoose
   .connect(
@@ -39,6 +47,6 @@ mongoose
     console.error("Error connection", error);
   });
 
-httpServer.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
