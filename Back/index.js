@@ -3,16 +3,14 @@ const server = require("./src/server");
 const mongoose = require("mongoose");
 const cors = require('cors'); // Importa el paquete cors
 const PORT = process.env.PORT || 3002;
-const { createServer } = require("node:http");
 
-
-// Configura CORS
 server.use(cors({
-  origin: ['https://hebra-circular.vercel.app/',process.env.DEPLOY_URL, process.env.LOCAL_URL],
+  origin: ['https://hebra-circular.vercel.app', process.env.LOCAL_URL],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   preflightContinue: true
 }));
+
 // Middleware personalizado para imprimir un mensaje en la consola
 server.use((req, res, next) => {
   console.log(`Received ${req.method} request from ${req.origin} for ${req.path}`);
@@ -30,9 +28,6 @@ mongoose
     console.error("Error connection", error);
   });
 
-const httpServer = createServer(server);
-
-console.log(PORT);
-httpServer.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
