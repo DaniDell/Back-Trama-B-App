@@ -3,11 +3,10 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const server = express();
-
+const { createServer } = require("node:http");
 const PORT = process.env.PORT || 3002;
 
-// Importa tus routers
-const routers = require('./routers/index');
+
 
 // Configuración de CORS
 const corsOptions = {
@@ -21,12 +20,7 @@ const corsOptions = {
 // Aplicar middleware CORS
 server.use(cors(corsOptions));
 
-// Asegúrate de que estás utilizando este middleware
-server.use(express.json());
-
-// Usa tus routers
-server.use('/users', routers.usersRouter);
-server.use('/measures', routers.measuresRouter);
+const httpServer = createServer(server);
 
 
 // Middleware personalizado para imprimir un mensaje en la consola
@@ -48,6 +42,6 @@ mongoose
     console.error("Error connection", error);
   });
 
-server.listen(PORT, () => {
+  httpServer.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
