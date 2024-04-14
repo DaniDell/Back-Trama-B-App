@@ -5,14 +5,14 @@ const cors = require('cors'); // Importa el paquete cors
 const PORT = process.env.PORT || 3002;
 const { createServer } = require("node:http");
 
+
 // Configura CORS
-server.options('*', cors({
-  origin: ['http://localhost:5173', 'https://hebra-circular.vercel.app/'],
+server.use(cors({
+  origin: [process.env.DEPLOY_URL, process.env.LOCAL_URL],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   preflightContinue: true
 }));
-
 // Middleware personalizado para imprimir un mensaje en la consola
 server.use((req, res, next) => {
   console.log(`Received ${req.method} request from ${req.origin} for ${req.path}`);
