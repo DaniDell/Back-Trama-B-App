@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 3002;
 
 
 
+
 // Configuración de CORS
 const corsOptions = {
   origin: ['https://hebra-circular.vercel.app', process.env.LOCAL_URL],
